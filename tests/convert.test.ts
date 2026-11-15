@@ -33,5 +33,17 @@ describe('convert', () => {
     const result = convert('USD', 'JPY', 1);
 
     expect(result.convertedAmount).toBe(152)
-  })
+  });
+
+  test('USD to CAD for exchange rate', () => {
+    const result = convert('USD', 'CAD', 100);
+
+    expect(result.exchangeRate).toBe(1.388889);
+  });
+
+  test('CAD to GBP rounding check', () => {
+    const result = convert('CAD', 'GBP', 0.50);
+
+    expect(result.convertedAmount).toBe(0.29);
+  });
 });
