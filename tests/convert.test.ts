@@ -22,4 +22,10 @@ describe('convert', () => {
     expect(result.convertedAmount).toBe(25.5);
     expect(result.exchangeRate).toBe(1);
   });
+
+  test('returns an exact amount with no floating point error', () => {
+    const result = convert('CAD', 'GBP', 100);
+
+    expect(result.convertedAmount).toBe(57);
+  })
 });
