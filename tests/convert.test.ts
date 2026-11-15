@@ -27,5 +27,11 @@ describe('convert', () => {
     const result = convert('CAD', 'GBP', 100);
 
     expect(result.convertedAmount).toBe(57);
+  });
+
+  test('USD to JPY check convertedAmount for decimal values', () => {
+    const result = convert('USD', 'JPY', 1);
+
+    expect(result.convertedAmount).toBe(152)
   })
 });
