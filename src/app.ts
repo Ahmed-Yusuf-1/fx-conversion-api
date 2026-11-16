@@ -41,5 +41,12 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
+  // Its other errors, such as a body that is too large, carry their own 4xx status.
+  // Those are the caller's mistake too, so they must not be reported as a server error.
+  if (err instanceof Error && 'status' in err && typeof err.status === 'number' && err.status < 500) {
+    res.status(err.status).json({ errors: [err.message] });
+    return;
+  }
+
   res.status(500).json({ errors: ['Something went wrong on the server'] });
 });

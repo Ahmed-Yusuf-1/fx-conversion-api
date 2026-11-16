@@ -58,6 +58,15 @@ describe('POST /convert', () => {
     expect(response.body).toEqual({ errors: ['Request body is not valid JSON'] });
   });
 
+  test('answers 413, not 500, when the body is too large', async () => {
+    const response = await request(app)
+      .post('/convert')
+      .send({ from: 'CAD', to: 'USD', amount: 100, padding: 'x'.repeat(200000) });
+
+    expect(response.status).toBe(413);
+    expect(response.body).toEqual({ errors: ['request entity too large'] });
+  });
+
   test('answers 400 when there is no body', async () => {
     const response = await request(app).post('/convert');
 

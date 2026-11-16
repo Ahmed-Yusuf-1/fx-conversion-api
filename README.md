@@ -72,6 +72,7 @@ Every error is a list of messages. If a request has several problems, they all c
 |---|---|
 | `400` | A field is missing, has the wrong type or has a value that is not allowed |
 | `400` | The body is not valid JSON |
+| `413` | The body is larger than 100 kb |
 | `404` | Any address or method other than `POST /convert` |
 | `500` | An unexpected error on the server |
 
@@ -107,19 +108,21 @@ Each source file has a matching test file in `tests/`, except `server.ts`.
 
 ## AI disclosure
 
-I used Claude Opus 5.5/Fable 5.2. How much I used it changed from part to part, and that was on purpose.
+I used Claude Opus 5.5/Fable 5.2 throughout. How closely I worked with it changed from part to part, and that was on purpose.
 
-**Where I slowed down.** For the parts that matter most, Claude acted as a mentor: it explained ideas, laid out options and reviewed my work. I wrote the code and made the decisions for:
+**Where I slowed down.** The conversion logic and the money decisions are the core of this task, so I built them with Claude one small step at a time. It laid out options and reviewed my work. I chose between the options and wrote the implementation:
 
 - the rates table and the conversion logic (`src/rates.ts`, `src/convert.ts`) and their tests
 - the money decisions above: the decimal library, the rounding rules and the yen case
 - the validation rules, and the first validation check and its test
 
-**Where I scaled up.** For the routine parts, Claude wrote the code:
+**Where I scaled up.** These parts are routine, so Claude wrote them:
 
 - the project setup (TypeScript and Jest configuration)
-- the rest of the validation code and its tests
+- the rest of the validation code and its tests, following the rules I had set
 - the Express endpoint and its tests (`src/app.ts`, `src/server.ts`, `tests/app.test.ts`)
 - the code comments and the first draft of this README
 
-This is how I work with AI in general. I use more of it when speed is what the task needs, and I slow down and work by hand when I need to understand something properly or when it has to be exactly right.
+Routine code is where mistakes tend to slip through, so every validation rule has a test, and I had the finished API checked with unusual requests such as oversized bodies, wrong content types and odd values. That check found one wrong status code, which is now fixed and tested.
+
+This is how I work with AI in general. I lean on it more when speed is what the task needs, and I work with it more closely, step by step, when I need to understand something properly or when it has to be exactly right.
